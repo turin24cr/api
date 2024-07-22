@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os  # Asegúrate de que esta línea esté aquí
 
 app = Flask(__name__)
 
