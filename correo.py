@@ -8,8 +8,6 @@ app = Flask(__name__)
 
 smtp_user = os.getenv('SMTP_USER')  # Agregar esta línea
 smtp_password = os.getenv('SMTP_PASSWORD')  # Agregar esta línea
-
-
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.get_json()
@@ -17,12 +15,12 @@ def send_email():
     # Verificar que los datos necesarios están presentes
     if not all(k in data for k in ("to_email", "subject", "message")):
         return jsonify({"error": "Faltan datos"}), 400
- 
+    
+    if not smtp_user or not smtp_password:
+        return jsonify({"error": "Las variables de entorno SMTP_USER o SMTP_PASSWORD no están configuradas."}), 500
+
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-   # smtp_user = "turiiiiin24@gmail.com"  # Reemplaza con tu dirección de correo
-    #smtp_password = "rwoh pkql zwfz ckhv"  # Reemplaza con tu contraseña
-
     to_email = data['to_email']
     subject = data['subject']
     message = data['message']
@@ -46,6 +44,3 @@ def send_email():
         return jsonify({"message": "Correo enviado exitosamente!"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
