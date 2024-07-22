@@ -5,6 +5,10 @@ from email.mime.text import MIMEText
 
 app = Flask(__name__)
 
+smtp_user = os.getenv('SMTP_USER')  # Agregar esta línea
+smtp_password = os.getenv('SMTP_PASSWORD')  # Agregar esta línea
+
+
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.get_json()
@@ -15,8 +19,8 @@ def send_email():
  
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "turiiiiin24@gmail.com"  # Reemplaza con tu dirección de correo
-    smtp_password = "rwoh pkql zwfz ckhv"  # Reemplaza con tu contraseña
+   # smtp_user = "turiiiiin24@gmail.com"  # Reemplaza con tu dirección de correo
+    #smtp_password = "rwoh pkql zwfz ckhv"  # Reemplaza con tu contraseña
 
     to_email = data['to_email']
     subject = data['subject']
