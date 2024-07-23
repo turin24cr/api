@@ -1,38 +1,93 @@
 from flask import Flask, request, jsonify
 import smtplib
 from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-#import os  # Asegúrate de que esta línea esté aquí
-
+from email.mime.text import MIMEText#
+ 
+  
 app = Flask(__name__)
-
-#smtp_user = os.getenv('SMTP_USER')  # Agregar esta línea
-#smtp_password = os.getenv('SMTP_PASSWORD')  # Agregar esta línea
+smtp_user = "turiiiiin24@gmail.com"  # Reemplaza con tu dirección de correo
+smtp_password = "rwoh pkql zwfz ckhv"  # Reemplaza con tu contraseña
 
 
 @app.route('/send-email', methods=['POST'])
 def send_email():
+    
     data = request.get_json()
     
     # Verificar que los datos necesarios están presentes
     if not all(k in data for k in ("to_email", "subject", "message")):
         return jsonify({"error": "Faltan datos"}), 400
- 
+    
+    if not smtp_user or not smtp_password:
+        return jsonify({"error": "Las variables de entorno SMTP_USER o SMTP_PASSWORD no están configuradas."}), 500
+
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "turiiiiin24@gmail.com"  # Reemplaza con tu dirección de correo
-    smtp_password = "rwoh pkql zwfz ckhv"  # Reemplaza con tu contraseña
-
     to_email = data['to_email']
     subject = data['subject']
-    message = data['message']
+    message_content = data['message']
+
+    # Crear el contenido HTML del mensaje
+    html_content = f"""
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                padding: 20px;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }}
+            .header {{
+                text-align: center;
+                padding-bottom: 20px;
+            }}
+            .header h1 {{
+                color: #007BFF;
+            }}
+            .content {{
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333333;
+            }}
+            .footer {{
+                text-align: center;
+                font-size: 14px;
+                color: #777777;
+                margin-top: 20px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>¡Nuevo Pedido!</h1>
+            </div>
+            <div class="content">
+                <p>{message_content}</p>
+            </div>
+            <div class="footer">
+                <p>Gracias por su atención.</p>
+                <p>Atentamente,<br>El equipo de SHEIN</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
     # Crear el mensaje
     msg = MIMEMultipart()
     msg['From'] = smtp_user
     msg['To'] = to_email
     msg['Subject'] = subject
-    msg.attach(MIMEText(message, 'plain'))
+    msg.attach(MIMEText(html_content, 'html'))
 
     try:
         # Conectar al servidor SMTP
