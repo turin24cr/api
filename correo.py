@@ -68,14 +68,14 @@ def send_email():
     <body>
         <div class="container">
             <div class="header">
-                <h1>¡Nuevo Pedido!</h1>
+                <h1>Se Ha Registrado ¡Un Nuevo Pedido!</h1>
             </div>
             <div class="content">
                 <p>{message_content}</p>
             </div>
             <div class="footer">
                 <p>Gracias por su atención.</p>
-                <p>Atentamente,<br>El equipo de SHEIN</p>
+                <p>Atentamente,<br>Nuestro Equipo</p>
             </div>
         </div>
     </body>
